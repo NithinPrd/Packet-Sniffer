@@ -84,8 +84,11 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
+                for i in range(len(data)):
+                    if(not (data[i]>=32 and data[i]<=128)):
+                        data[i] = '.'
                 
-                #T.insert(tk.END, '\n\tData : ' + data)
+                T.insert(tk.END, '\n\tData : ' + data)
 
             #ICMP Packets
             elif protocol == 1 :
@@ -107,8 +110,11 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
+                for i in range(len(data)):
+                    if(not (data[i]>=32 and data[i]<=128)):
+                        data[i] = '.'
                 
-                #T.insert(tk.END, '\n\tData : ' + data)
+                T.insert(tk.END, '\n\tData : ' + data)
 
             #UDP packets
             elif protocol == 17 :
@@ -124,15 +130,19 @@ def startIt():
                 length = udph[2]
                 checksum = udph[3]
                 
-                #T.insert(tk.END, '\n Source Port : ' + str(source_port) + '\n Dest Port : ' + str(dest_port) + '\n Length : ' + str(length) + '\n Checksum : ' + str(checksum)
+                T.insert(tk.END, '\n Source Port : ' + str(source_port) 
+                + '\n Dest Port : ' + str(dest_port) + '\n Length : ' + str(length) + '\n Checksum : ' + str(checksum))
                 
                 h_size = eth_length + iph_length + udph_length
                 data_size = len(packet) - h_size
                 
                 #get data from the packet
                 data = packet[h_size:]
+                for i in range(len(data)):
+                    if(not (data[i]>=32 and data[i]<=128)):
+                        data[i] = '.'
                 
-                #T.insert(tk.END, '\n\tData : ' + data)
+                T.insert(tk.END, '\n\tData : ' + data)
 
             #some other IP packet like IGMP
             else :
@@ -222,8 +232,11 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
+                for i in range(len(data)):
+                    if(not (data[i]>=32 and data[i]<=128)):
+                        data[i] = '.'
                 
-                #T.insert(tk.END, '\n\tData : ' + data)
+                T.insert(tk.END, '\n\tData : ' + data)
 
             #ICMP Packets
             elif protocol == 1 :
@@ -245,8 +258,11 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
+                for i in range(len(data)):
+                    if(not (data[i]>=32 and data[i]<=128)):
+                        data[i] = '.'
                 
-                #T.insert(tk.END, '\n\tData : ' + data)
+                T.insert(tk.END, '\n\tData : ' + data)
 
             #UDP packets
             elif protocol == 17 :
@@ -269,8 +285,11 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
+                for i in range(len(data)):
+                    if(not (data[i]>=32 and data[i]<=128)):
+                        data[i] = '.'
                 
-                #T.insert(tk.END, '\n\tData : ' + data)
+                T.insert(tk.END, '\n\tData : ' + data)
 
             #some other IP packet like IGMP
             else :
