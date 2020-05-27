@@ -3,6 +3,7 @@
 
 import socket, sys
 from struct import *
+import Tkinter as tk
 
 #Convert a string of 6 characters of ethernet address into a dash separated hex string
 def eth_addr (a) :
@@ -20,11 +21,15 @@ except socket.error , msg:
 # receive a packet
 def startIt():
     print 'Hello world'
+    count = 1
 
     while True:
         print 'Code is inside while loop'
 
         packet = s.recvfrom(65565)
+
+        T.insert(tk.END, "\n\n********** PACKET #" + str(count) + " **********")
+        count += 1
         
         #packet string from tuple
         packet = packet[0]
@@ -84,11 +89,11 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
-                for i in range(len(data)):
-                    if(not (data[i]>=32 and data[i]<=128)):
-                        data[i] = '.'
+                for c in data:
+                    if(not (c>=32 and c<=128)):
+                        data.replace(c, '.')
                 
-                T.insert(tk.END, '\n\tData : ' + data)
+                #T.insert(tk.END, '\n\tData : ' + data)
 
             #ICMP Packets
             elif protocol == 1 :
@@ -110,11 +115,11 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
-                for i in range(len(data)):
-                    if(not (data[i]>=32 and data[i]<=128)):
-                        data[i] = '.'
+                for c in data:
+                    if(not (c>=32 and c<=128)):
+                        data.replace(c, '.')
                 
-                T.insert(tk.END, '\n\tData : ' + data)
+                #T.insert(tk.END, '\n\tData : ' + data)
 
             #UDP packets
             elif protocol == 17 :
@@ -138,21 +143,25 @@ def startIt():
                 
                 #get data from the packet
                 data = packet[h_size:]
-                for i in range(len(data)):
-                    if(not (data[i]>=32 and data[i]<=128)):
-                        data[i] = '.'
+                for c in data:
+                    if(not (c>=32 and c<=128)):
+                        data.replace(c, '.')
                 
-                T.insert(tk.END, '\n\tData : ' + data)
+                #T.insert(tk.END, '\n\tData : ' + data)
 
             #some other IP packet like IGMP
             else :
-                T.insert(tk.END, 'Protocol other than TCP/UDP/ICMP')
+                T.insert(tk.END, '\nProtocol other than TCP/UDP/ICMP')
                 
             T.insert(tk.END, '\n')
-            
 
 from ctypes import *
 
+def testLog():
+    while(1):
+        T.insert(tk.END, 'Got a new packet.\n')
+
+#Function to run the C code. This logs the data of intercepted packets into a new file.
 def newLog():
     so_file = "./dlsniffer.so"
     res = CDLL(so_file)
@@ -160,6 +169,7 @@ def newLog():
 
 import Tkinter as tk
 
+#Create Tkinter window
 m = tk.Tk()
 m.geometry("700x500")
 frame = tk.Frame(m)
@@ -168,7 +178,7 @@ frame.pack()
 def startLog():
     T.insert(tk.END, "logged message")
 
-m.title("Sample Packet Tracer")
+m.title("Abhishek Packet Tracer")
 button1 = tk.Button(frame, text='Start Intercept', command=startIt)
 button1.pack(side = tk.LEFT)
 T = tk.Text(m)
