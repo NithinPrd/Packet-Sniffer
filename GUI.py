@@ -5,13 +5,15 @@ import socket, sys
 from struct import *
 import Tkinter as tk
 
+gflag = True
+
 #Convert a string of 6 characters of ethernet address into a dash separated hex string
 def eth_addr (a) :
   b = '%.2x:%.2x:%.2x:%.2x:%.2x:%.2x' % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]), ord(a[4]) , ord(a[5]))
   return b
 
 #create a AF_PACKET type raw socket (thats basically packet level)
-#define ETH_P_ALL    0x0003          /* Every packet (be careful!!!) */
+#define ETH_P_ALL    0x0003
 try:
 	s = socket.socket( socket.AF_PACKET , socket.SOCK_RAW , socket.ntohs(0x0003))
 except socket.error , msg:
@@ -20,10 +22,12 @@ except socket.error , msg:
 
 # receive a packet
 def startIt():
+    global gflag
     print 'Hello world'
+    gflag = True
     count = 1
 
-    while True:
+    while gflag:
         print 'Code is inside while loop'
 
         packet = s.recvfrom(65565)
@@ -155,11 +159,12 @@ def startIt():
                 
             T.insert(tk.END, '\n')
 
-from ctypes import *
+def stopIt():
+    global gflag
+    gflag = False
 
-def testLog():
-    while(1):
-        T.insert(tk.END, 'Got a new packet.\n')
+from ctypes import *
+from threading import Thread
 
 #Function to run the C code. This logs the data of intercepted packets into a new file.
 def newLog():
@@ -179,12 +184,20 @@ def startLog():
     T.insert(tk.END, "logged message")
 
 m.title("Abhishek Packet Tracer")
+
 button1 = tk.Button(frame, text='Start Intercept', command=startIt)
 button1.pack(side = tk.LEFT)
+
 T = tk.Text(m)
 T.pack()
 
 button2 = tk.Button(frame, text='Log Intercept', command=newLog)
 button2.pack(side = tk.LEFT)
+
+import subprocess, signal
+
+button3 = tk.Button(frame, text='Stop Intercept', command=stopIt)
+button3.pack(side = tk.LEFT)
+
 T.insert(tk.END, "Log Text:\n")
 m.mainloop()
